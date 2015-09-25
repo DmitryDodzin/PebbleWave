@@ -1,0 +1,34 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Dmitry Dodzin",
+    "longName": "Wave",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/Small-Wave.png",
+                "menuIcon": true,
+                "name": "IMAGE_WAVE_BACKGROUND",
+                "targetPlatforms": [
+                    "aplite",
+                    "basalt"
+                ],
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Wave",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "4aa02db9-948f-4cc7-a448-f9069ccf4a7e",
+    "versionLabel": "0.5",
+    "watchapp": {
+        "watchface": true
+    }
+}
