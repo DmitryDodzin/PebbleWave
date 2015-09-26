@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "round.h"
 
 Window *_window;
 
@@ -44,6 +45,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 void create_watch(Window *window){
+	
 // SUPPORT FOR COLOR AND B&W
 #ifdef PBL_COLOR
 	time_layer = text_layer_create(GRect(15, 108, 144, 50));
@@ -75,22 +77,26 @@ void handle_init(void) {
 	// Create a window and text layer
 	_window = window_create();
 	
+#if defined(PBL_ROUND)
+	create_round_time(_window);
+#else	
 	create_background(_window);
-	
 	create_watch(_window);
+#endif
 	
 	// Push the window
 	window_stack_push(_window, true);
-	
-	// App Logging!
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Just pushed a window!");
 }
 
 
 void handle_deinit(void) {
+
+#if defined(PBL_ROUND)
+	destroy_round_time();
+#else	
 	destroy_background();
-		
 	destroy_watch();
+#endif
 	
 	// Destroy the window
 	window_destroy(_window);
