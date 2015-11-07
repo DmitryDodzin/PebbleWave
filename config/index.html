@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pebble Wave config</title>
+	<link rel="stylesheet" type="text/css" href="/lib/Slate/dist/css/slate.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="/lib/Slate/dist/js/slate.js"></script>
+</head>
+<body>
+
+	<div class="item-container">
+		<div class="item-container-header">Display</div>
+		<div class="item-container-content">
+			<label class="item">
+				Background Change
+				<input type="checkbox" id="BACKGROUND_CHANGE_ENABLED" class="item-toggle" disabled>
+			</label>
+			<label class="item">
+				Enable Date
+				<input type="checkbox" id="DATE_ENABLED" class="item-toggle" disabled>
+			</label>
+		</div>
+		<div class="item-container">
+			<div class="button-container">
+				<input type="button" id="submit" class="item-button" value="Save">
+			</div>
+		</div>
+		<div class="item-container-footer">
+			<br/>
+			I wount stop you donating, <a href="#pay">Paypal</a> or <a href="#bit">Bitcoin</a>
+			<span id="debug"></span>
+		</div>
+	</div>
+	<script>
+			function saveOptions() {
+				var options = {}
+				//Add all textual values
+				$('textarea, select, [type="hidden"], [type="password"], [type="text"]').each(function(){options[$(this).attr('id')] = $(this).val();})
+				//Add all checkbox type values
+				$('[type="radio"], [type="checkbox"]').each(function(){options[$(this).attr('id')] = $(this).is(':checked');})
+				return options;
+			}
+			$().ready(function() {
+				$("#submit").click(function() {
+					console.log("Submit");
+					var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(saveOptions()));
+					console.log("Warping to: " + location);
+					console.log(location);
+					document.location = location;
+				});
+				//Set form values to whatever is passed in.
+				var obj = jQuery.parseJSON(decodeURIComponent(window.location.search.substring(1)));
+
+				$('#debug').html(JSON.stringify(obj));
+
+				var options = obj.options;
+				for(index in options){
+					var key = options[index];
+					$("#"+[key]).removeAttr('disabled');
+
+					if(key in obj){
+						var input = $("#"+[key]);
+						if(input.is('[type="radio"], [type="checkbox"]') && obj[key]){
+							input.attr('checked', '');
+						} else{
+							input.val(obj[key]);
+						}
+					}
+				}
+			});
+		</script>
+</body>
+</html>

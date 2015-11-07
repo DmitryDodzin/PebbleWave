@@ -1,7 +1,11 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "BACKGROUND_CHANGE_ENABLED" : 1,
+        "DATE_ENABLED": 2
+
+    },
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "Dmitry Dodzin",
     "longName": "Wave",
@@ -29,7 +33,7 @@
         "chalk"
     ],
     "uuid": "4aa02db9-948f-4cc7-a448-f9069ccf4a7e",
-    "versionLabel": "0.6",
+    "versionLabel": "0.7",
     "watchapp": {
         "watchface": true
     }
