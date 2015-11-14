@@ -62,6 +62,10 @@ void destroy_watch(void){
 	text_layer_destroy(time_layer);
 }
 
+void refresh_after_config(){
+  rebuild_background();
+}
+
 void inbox_received_handler(DictionaryIterator *iter, void *context) {
 
   Tuple *bg_change_t = dict_find(iter, BACKGROUND_CHANGE_ENABLED);
@@ -76,27 +80,27 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
 
   persist_write_bool(BACKGROUND_CHANGE_ENABLED, bg_change);
   persist_write_bool(DATE_ENABLED, date_enable);
+
+  refresh_after_config();
 }
 
 void handle_init(void) {
 	_window = window_create();
-	
-	create_background(_window);
-	create_watch(_window);
-	
-	window_stack_push(_window, true);
-
+  
+  create_background(_window);
+  create_watch(_window);
+  
+  window_stack_push(_window, true);
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 
 void handle_deinit(void) {
-
-	destroy_background();
-	destroy_watch();
-	
-	window_destroy(_window);
+  destroy_background();
+  destroy_watch();
+  
+  window_destroy(_window);
 }
 
 int main(void) {
