@@ -22,7 +22,7 @@ Pebble.addEventListener("showConfiguration", function() {
   var config_clone = JSON.parse(JSON.stringify(config_dict));
   config_clone.options = options;
 
-  Pebble.openURL('http://10.0.0.7:8000/index.html?options='+encodeURIComponent(JSON.stringify(config_clone)));
+  Pebble.openURL('http://dmitrydodzin.github.io/PebbleWave/config/index.html?options='+encodeURIComponent(JSON.stringify(config_clone)));
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
