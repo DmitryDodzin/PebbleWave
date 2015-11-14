@@ -67,8 +67,8 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *bg_change_t = dict_find(iter, BACKGROUND_CHANGE_ENABLED);
   Tuple *date_enable_t = dict_find(iter, DATE_ENABLED);
 
-  bool bg_change = bg_change_t->value->int32;
-  bool date_enable = date_enable_t->value->int32;
+  bool bg_change = bg_change_t->value->int8;
+  bool date_enable = date_enable_t->value->int8;
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Pebble: BACKGROUND_CHANGE_ENABLED -> %d", bg_change);
 

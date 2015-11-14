@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<div class="item-container">
+	<div id="main-container" class="item-container">
 		<div class="item-container-header">Display</div>
 		<div class="item-container-content">
 			<label class="item">
@@ -49,23 +49,41 @@
 					document.location = location;
 				});
 				//Set form values to whatever is passed in.
-				var obj = jQuery.parseJSON(decodeURIComponent(window.location.search.substring(1)));
 
-				$('#debug').html(JSON.stringify(obj));
+				var raw_options = "";
 
-				var options = obj.options;
-				for(index in options){
-					var key = options[index];
-					$("#"+[key]).removeAttr('disabled');
-
-					if(key in obj){
-						var input = $("#"+[key]);
-						if(input.is('[type="radio"], [type="checkbox"]') && obj[key]){
-							input.attr('checked', '');
-						} else{
-							input.val(obj[key]);
-						}
+				window.location.search.substring(1).split('&').forEach(function(part){
+					var item = part.split('=');
+					if(item[0] == 'options'){
+						raw_options = item[1];
 					}
+				});
+
+				try{
+					var obj = jQuery.parseJSON(decodeURIComponent(raw_options));
+
+					$('#debug').html(JSON.stringify(obj));
+
+					var options = obj.options;
+					for(index in options){
+						var key = options[index];
+						$("#"+[key]).removeAttr('disabled');
+
+						if(key in obj){
+							var input = $("#"+[key]);
+							if(input.is('[type="radio"], [type="checkbox"]') && obj[key]){
+								input.attr('checked', '');
+							} else{
+								input.val(obj[key]);
+							}
+						}
+					}	
+				}
+				catch(e){
+					
+					var error_tempalte = '<div class="item-container-header">Error</div><div class="item-container-content"><div class="item">Error ocured while loading the configuration, We sent our best monkey to fix it =]</div></div></div>'
+
+					$('#main-container').html(error_tempalte);
 				}
 			});
 		</script>

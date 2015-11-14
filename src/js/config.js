@@ -18,7 +18,7 @@ Pebble.addEventListener("showConfiguration", function() {
   var config_clone = JSON.parse(JSON.stringify(config_dict));
   config_clone.options = options;
 
-  Pebble.openURL('http://10.0.0.5:8000/index.html?'+encodeURIComponent(JSON.stringify(config_clone)));
+  Pebble.openURL('http://10.0.0.7:8000/index.html?options='+encodeURIComponent(JSON.stringify(config_clone)));
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
@@ -38,7 +38,6 @@ Pebble.addEventListener("webviewclosed", function(e) {
       config_dict[key] = config_dict_raw[key]
     }
   }
-
 
   localStorage.setItem('config', JSON.stringify(config_dict));
 
