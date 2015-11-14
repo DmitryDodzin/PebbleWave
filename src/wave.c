@@ -1,56 +1,12 @@
 #include <pebble.h>
+#include <background.h>
+
+#define BACKGROUND_CHANGE_ENABLED     1
+#define DATE_ENABLED   								2
 
 Window *_window;
 
 TextLayer *time_layer;
-
-BitmapLayer *_background_layer;
-GBitmap *_background_bitmap;
-
-
-void choose_background(bool bt_connected){
-	if(_background_bitmap){
-		gbitmap_destroy(_background_bitmap);
-	}
-	
-	if(bt_connected){
-		_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WAVE_BACKGROUND);
-	} else {
-		_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DES_WAVE_BACKGROUND);
-	}
-	
-	bitmap_layer_set_bitmap(_background_layer, _background_bitmap);
-}
-
-// Background
-void create_background(Window *window){
-  Layer *window_layer = window_get_root_layer(window);
-
-	_background_layer = bitmap_layer_create(layer_get_bounds(window_layer));
-	
-#ifdef PBL_SDK_2
-  choose_background(bluetooth_connection_service_peek());
-#elif PBL_SDK_3
-  choose_background(connection_service_peek_pebble_app_connection());
-#endif
-	
-	bitmap_layer_set_bitmap(_background_layer, _background_bitmap);
-	
-	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(_background_layer));
-
-#ifdef PBL_SDK_2
-  bluetooth_connection_service_subscribe(choose_background);
-#elif PBL_SDK_3
-  connection_service_subscribe((ConnectionHandlers) {
-    .pebble_app_connection_handler = choose_background
-  });
-#endif
-}
-
-void destroy_background(void){
-	gbitmap_destroy(_background_bitmap);
-	bitmap_layer_destroy(_background_layer);
-}
 
 // Time
 void update_time() {
@@ -106,23 +62,45 @@ void destroy_watch(void){
 	text_layer_destroy(time_layer);
 }
 
+void refresh_after_config(){
+  rebuild_background();
+}
+
+void inbox_received_handler(DictionaryIterator *iter, void *context) {
+
+  Tuple *bg_change_t = dict_find(iter, BACKGROUND_CHANGE_ENABLED);
+  Tuple *date_enable_t = dict_find(iter, DATE_ENABLED);
+
+  bool bg_change = bg_change_t->value->int8;
+  bool date_enable = date_enable_t->value->int8;
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Pebble: BACKGROUND_CHANGE_ENABLED -> %d", bg_change);
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Pebble: DATE_ENABLED %d", date_enable);
+
+  persist_write_bool(BACKGROUND_CHANGE_ENABLED, bg_change);
+  persist_write_bool(DATE_ENABLED, date_enable);
+
+  refresh_after_config();
+}
+
 void handle_init(void) {
 	_window = window_create();
-	
-	create_background(_window);
-	create_watch(_window);
-	
-	window_stack_push(_window, true);
+  
+  create_background(_window);
+  create_watch(_window);
+  
+  window_stack_push(_window, true);
+  app_message_register_inbox_received(inbox_received_handler);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 
 void handle_deinit(void) {
-
-	destroy_background();
-	destroy_watch();
-	
-	// Destroy the window
-	window_destroy(_window);
+  destroy_background();
+  destroy_watch();
+  
+  window_destroy(_window);
 }
 
 int main(void) {
