@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Pebble Wave config</title>
+	<link rel="stylesheet" type="text/css" href="site.css" />
 	<link rel="stylesheet" type="text/css" href="lib/Slate/dist/css/slate.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="lib/Slate/dist/js/slate.js"></script>
@@ -9,11 +10,24 @@
 <body>
 
 	<div id="main-container" class="item-container">
-		<div class="item-container-header">Display</div>
+		<div class="item-container-header">Connection</div>
 		<div class="item-container-content">
-			<label class="item">
+			<label class="item not-supported" version="Min version: 0.7">
 				Show Bluetooth disconnect
 				<input type="checkbox" id="BACKGROUND_CHANGE_ENABLED" class="item-toggle" disabled>
+			</label>
+		</div>
+		<div class="item-container-content">
+			<label class="item not-supported" version="Min version: 0.8">
+				Vibrate Bluetooth disconnect
+				<input type="checkbox" id="BT_VIBRATE_ENABLED" class="item-toggle" disabled>
+			</label>
+		</div>
+		<div class="item-container-header">Display</div>
+		<div class="item-container-content">
+			<label class="item not-supported" version="Min version: 0.8">
+				Show Date
+				<input type="checkbox" id="DATE_ENABLED" class="item-toggle" disabled>
 			</label>
 		</div>
 		<div class="item-container">
