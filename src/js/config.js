@@ -1,7 +1,9 @@
 if(!'config' in localStorage){
 
   var DEFAULTS = {
-    'BACKGROUND_CHANGE_ENABLED': true
+    'BACKGROUND_CHANGE_ENABLED': true,
+    'BT_VIBRATE_ENABLED': false,
+    'DATE_ENABLED': false    
   }
 
   localStorage.setItem('config', JSON.stringify(DEFAULTS));
@@ -10,7 +12,7 @@ if(!'config' in localStorage){
 var initialized = false;
 var config_dict = JSON.parse(localStorage.getItem('config'));
 
-var options = ['BACKGROUND_CHANGE_ENABLED'];
+var options = ['BACKGROUND_CHANGE_ENABLED', 'DATE_ENABLED', 'BT_VIBRATE_ENABLED'];
 
 Pebble.addEventListener("ready", function() {
   initialized = true;
