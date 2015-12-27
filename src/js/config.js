@@ -1,4 +1,4 @@
-if(!'config' in localStorage){
+if(!'config' in localStorage || JSON.parse(localStorage.getItem('config')) == null){
 
   var DEFAULTS = {
     'BACKGROUND_CHANGE_ENABLED': true,
