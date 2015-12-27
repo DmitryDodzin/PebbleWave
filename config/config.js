@@ -36,7 +36,7 @@ $().ready(function() {
 		var options = obj.options;
 		for(index in options){
 			var key = options[index];
-			$("#"+[key]).removeAttr('disabled');
+			$("#"+[key]).removeAttr('disabled').parent().removeClass('not-supported');
 
 			if(key in obj){
 				var input = $("#"+[key]);
