@@ -49,5 +49,6 @@ void create_background(Window *window){
 
 void destroy_background(void){
 	gbitmap_destroy(_background_bitmap);
+	gbitmap_destroy(_background_des_bitmap);
 	bitmap_layer_destroy(_background_layer);
 }
