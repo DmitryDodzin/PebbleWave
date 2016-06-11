@@ -1,9 +1,11 @@
 #include <pebble.h>
 #include <background.h>
+#include <battery.h>
 
 #define BACKGROUND_CHANGE_ENABLED     1
 #define DATE_ENABLED   								2
 #define BT_VIBRATE_ENABLED            3
+#define BATTERY_INDICATOR_ENABLED     4
 
 Window *_window;
 
@@ -95,6 +97,7 @@ void destroy_watch(void){
 void refresh_after_config(){
   rebuild_background();
   update_time();
+  update_battry_indicator(battery_state_service_peek());
 }
 
 void handle_bt_change(bool bt_connectd){
@@ -112,10 +115,12 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *bg_change_t = dict_find(iter, BACKGROUND_CHANGE_ENABLED);
   Tuple *date_enable_t = dict_find(iter, DATE_ENABLED);
   Tuple *bt_vibrate_t = dict_find(iter, BT_VIBRATE_ENABLED);
+  Tuple *battery_indic_t = dict_find(iter, BATTERY_INDICATOR_ENABLED);
 
   bool bg_change = bg_change_t->value->int8;
   bool date_enable = date_enable_t->value->int8;
   bool bt_vibrate = bt_vibrate_t->value->int8;
+  bool battery_indic = battery_indic_t->value->int8;
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Pebble: BACKGROUND_CHANGE_ENABLED -> %d", bg_change);
 
@@ -123,9 +128,12 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Pebble: BT_VIBRATE_ENABLED %d", bt_vibrate);  
 
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Pebble: BATTERY_INDICATOR_ENABLED %d", battery_indic);  
+
   persist_write_bool(BACKGROUND_CHANGE_ENABLED, bg_change);
   persist_write_bool(DATE_ENABLED, date_enable);
   persist_write_bool(BT_VIBRATE_ENABLED, bt_vibrate);
+  persist_write_bool(BATTERY_INDICATOR_ENABLED, battery_indic);
 
   refresh_after_config();
 }
@@ -135,6 +143,7 @@ void handle_init(void) {
   
   create_background(_window);
   create_watch(_window);
+  create_battry_indicator(_window);
 
   #ifdef PBL_SDK_2
     bluetooth_connection_service_subscribe(handle_bt_change);
@@ -143,6 +152,8 @@ void handle_init(void) {
       .pebble_app_connection_handler = handle_bt_change
     });
   #endif
+
+  battery_state_service_subscribe(update_battry_indicator);
   
   window_stack_push(_window, true);
   app_message_register_inbox_received(inbox_received_handler);
@@ -151,8 +162,11 @@ void handle_init(void) {
 
 
 void handle_deinit(void) {
+  battery_state_service_unsubscribe();
+
   destroy_background();
   destroy_watch();
+  destroy_battry_indicator();
   
   window_destroy(_window);
 }
