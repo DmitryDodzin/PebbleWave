@@ -9,17 +9,27 @@ GBitmap *_battery_indicator_empty_bitmap;
 
 
 void create_battry_indicator(Window *window){
-	_battery_indicator_layer = bitmap_layer_create(GRect(10, 10, 124, 30));
+	
 
-	bitmap_layer_set_alignment(_battery_indicator_layer, GAlignTopRight);
-
+	#ifdef PBL_ROUND
+		_battery_indicator_layer = bitmap_layer_create(GRect(10, 8, 160, 30));
+		bitmap_layer_set_alignment(_battery_indicator_layer, GAlignTop);
+	#else
+		_battery_indicator_layer = bitmap_layer_create(GRect(10, 10, 124, 30));
+		bitmap_layer_set_alignment(_battery_indicator_layer, GAlignTopRight);
+	#endif
 
 	_battery_indicator_empty_bitmap = gbitmap_create_blank(GSize(16, 7), GBitmapFormat1Bit);
 
 	_battery_indicator_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_INDICATORS);
 
-	_battery_indicatior_low_bitmap = gbitmap_create_as_sub_bitmap(_battery_indicator_bitmap, GRect(0, 0, 16, 7));
-	_battery_indicatior_charging_bitmap = gbitmap_create_as_sub_bitmap(_battery_indicator_bitmap, GRect(0, 7, 16, 7));
+	#ifdef PBL_COLOR
+		_battery_indicatior_low_bitmap = gbitmap_create_as_sub_bitmap(_battery_indicator_bitmap, GRect(0, 0, 16, 7));
+		_battery_indicatior_charging_bitmap = gbitmap_create_as_sub_bitmap(_battery_indicator_bitmap, GRect(0, 7, 16, 7));
+	#else
+		_battery_indicatior_low_bitmap = gbitmap_create_as_sub_bitmap(_battery_indicator_bitmap, GRect(0, 14, 16, 7));
+		_battery_indicatior_charging_bitmap = gbitmap_create_as_sub_bitmap(_battery_indicator_bitmap, GRect(0, 21, 16, 7));
+	#endif
 
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(_battery_indicator_layer));
 }
